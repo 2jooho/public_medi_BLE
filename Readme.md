@@ -1,4 +1,4 @@
-<img src="./readme_img/android_logo.png" width="450px" height="300px" text-align="center" alt="logo"></img><br/>
+<img src="./readme_img/android_logo.png" width="250px" height="250px" text-align="center" alt="logo"></img><br/>
 
 ***
 
@@ -8,7 +8,7 @@
 
 ***
 
-#개발환경 
+# 개발환경 
  * 안드로이드 스튜디오 
  
  * JSP
@@ -23,25 +23,25 @@
 
 ***
 
-#jsp서버 소스
+# jsp서버 소스
 
  * [jsp소스](https://github.com/2jooho/public_medi_BLE/tree/server)
 
 ***
 # APP 기능 소개
 
-1. splash, onboard, 로그인, 회원가입
-<img src="./readme_img/스플레쉬.png" width="200px" height="300px" text-align="center" alt="logo"></img>
-<img src="./readme_img/온보더2.png" width="200px" height="300px" text-align="center" alt="logo"></img>
-<img src="./readme_img/로그인.png" width="200px" height="300px" text-align="center" alt="logo"></img>
-<img src="./readme_img/회원가입.png" width="200px" height="300px" text-align="center" alt="logo"></img><br/>
+1. splash, onboard, 로그인, 회원가입   
+<img src="./readme_img/스플레쉬.png" width="200px" height="300px" alt="logo"></img>
+<img src="./readme_img/온보더2.png" width="200px" height="300px" alt="logo"></img>
+<img src="./readme_img/로그인.png" width="200px" height="300px"  alt="logo"></img>
+<img src="./readme_img/회원가입.png" width="200px" height="300px"  alt="logo"></img><br/>
 
-2. 메인1, 메인2, drawer
-<img src="./readme_img/메인1.png" width="200px" height="300px" text-align="center" alt="logo"></img>
-<img src="./readme_img/메인2.png" width="200px" height="300px" text-align="center" alt="logo"></img>
-<img src="./readme_img/드로어.png" width="200px" height="300px" text-align="center" alt="logo"></img><br/>
+2. 메인1, 메인2, drawer   
+<img src="./readme_img/메인1.png" width="200px" height="300px" alt="logo"></img>
+<img src="./readme_img/메인2.png" width="200px" height="300px" alt="logo"></img>
+<img src="./readme_img/드로어.png" width="200px" height="300px"alt="logo"></img><br/>
 
-3. 제품별추출, 추출버튼
+3. 제품별추출, 추출버튼   
 <img src="./readme_img/제품별.png" width="200px" height="300px" text-align="center" alt="logo"></img>
 <img src="./readme_img/추출.png" width="200px" height="300px" text-align="center" alt="logo"></img><br/>
 
