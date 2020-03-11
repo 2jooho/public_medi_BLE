@@ -10,7 +10,7 @@
 
 # 개발환경 
  * 안드로이드 스튜디오 
- 
+
  * JSP
  
  * mysql
@@ -23,11 +23,13 @@
 
 ***
 
+
 # jsp서버 소스
 
  * [jsp소스](https://github.com/2jooho/public_medi_BLE/tree/server)
 
 ***
+
 # APP 기능 소개
 
 ### `1. splash, onboard, 로그인, 회원가입`   
@@ -46,6 +48,7 @@
 <img src="./readme_img/추출.png" width="200px" height="300px" text-align="center" alt="logo"></img><br/>
 
 ***
+
 # 코드 소개
 
 * main_before   
@@ -67,3 +70,4 @@ viewpager로 제품을 나열하고 클릭시 위로 올라가고 자사몰 연동되는 모션 코드가 있�
 * amount_change_viewpager   
 
 제품별 추출량 변경 페이지를 소스가 들어있으며, list와 비동기로 jsp연동 등이 있음
+
