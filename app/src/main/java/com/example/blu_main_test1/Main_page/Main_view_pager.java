@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +51,10 @@ import com.example.blu_main_test1.Main_page.MainActivity;
 import com.example.blu_main_test1.Main_page.listadapter;
 import com.example.blu_main_test1.Main_page.sampledata;
 import com.example.blu_main_test1.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -67,7 +73,7 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
     private TabLayout tabLayout;
     private String text,action;
     UartService m_UartService;
-    private Timer mTimer,mTimer2;
+    private Timer mTimer[]=new Timer[6];
     private ImageButton amount_change,back,amount_start,product_amount,state_start,amount_stop,low_start;
     private EditText coffee_b_amount,coffee_s_amount,tea_b_amount,tea_s_amount;
     private LinearLayout background,sub_background;
@@ -132,16 +138,20 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
         fragmentAdapter.notifyDataSetChanged();
 
         //BLE 관련
+        for(int i=0;i<6;i++){
+            mTimer[i] = new Timer();
+        }
 
-        mTimer = new Timer();
+
         //머신 상태를 호출
-        mTimer.schedule(new Tea_large(), 0, 30000);
-        /*mTimer.schedule(new State(),1000,30000);
-        mTimer.schedule(new Tea_small(),2000,30000);
-        mTimer.schedule(new Coffee_large(),3000,30000);
-        mTimer.schedule(new Coffee_small(),4000,30000);
-        mTimer.schedule(new version(),5000,30000); */
-
+        if(connect.IsConnect) {
+            mTimer[0].schedule(new Tea_large(), 1000, 15000);
+            mTimer[1].schedule(new State(), 1500, 15000);
+            mTimer[2].schedule(new Tea_small(), 2000, 15000);
+            mTimer[3].schedule(new Coffee_large(), 2500, 15000);
+            mTimer[4].schedule(new Coffee_small(), 3000, 15000);
+            mTimer[5].schedule(new version(), 3500, 15000);
+        }
         //데이터 받는걸 확인
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE);
@@ -237,6 +247,21 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
 
             }
         });
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FCM Log", "getInstanceId failed", task.getException());
+                            return;
+                        }
+                   //     String token = task.getResult().getToken();
+                   //     Log.d("FCM Log", "FCM 토큰: " + token);
+                      //  Toast.makeText(Main_view_pager.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
 
     }
@@ -418,7 +443,6 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
              }
                         }
 
-
             });
 
             break;
@@ -554,7 +578,9 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onDestroy() {
-        mTimer.cancel();
+       for(int i=0;i<6;i++){
+           mTimer[i].cancel();
+       }
         unbindService(mServiceConnection);
         super.onDestroy();
     }

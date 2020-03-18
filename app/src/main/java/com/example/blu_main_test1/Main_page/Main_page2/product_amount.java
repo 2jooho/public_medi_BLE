@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +21,15 @@ import android.widget.TextView;
 
 import com.example.blu_main_test1.R;
 import com.example.blu_main_test1.amount_change_viewpager.CommonFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -43,6 +53,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+
+
 
 public class
 product_amount extends FragmentActivity {
@@ -63,6 +77,8 @@ product_amount extends FragmentActivity {
 
     ImageButton back;
     View positionView;
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +111,9 @@ product_amount extends FragmentActivity {
             }
         }
 
-        new CustomTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,textArray[viewPager.getCurrentItem()]);
+     //  new CustomTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,textArray[viewPager.getCurrentItem()]);
+      value();
+        // new CustomTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dealStatusBar(); // 상태 표시줄 높이 조정
 
         viewPager.setOffscreenPageLimit(4);
@@ -108,6 +126,32 @@ product_amount extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+
+
+    }
+    public void value()
+    {
+        final String[] a = new String[1];
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference result= db.collection("BLE_APP");
+        Query query = result.whereEqualTo("product_name",textArray[viewPager.getCurrentItem()]);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult())
+                    {
+                            amount.setText(document.getData().get("amount").toString());
+                            origin.setText(document.getData().get("product_origin").toString());
+                    }
+
+                }
+               else{
+                    Log.d("err","err");
+                }
             }
         });
     }
@@ -145,8 +189,8 @@ product_amount extends FragmentActivity {
                 fragment.bindData(textArray[position % textArray.length],textArray2[position%textArray.length]);
                 ImageLoader.getInstance().displayImage(imageArray[viewPager.getCurrentItem()], image);
 
-                new CustomTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,textArray[viewPager.getCurrentItem()]);
-
+            // new CustomTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                value();
                 kind.setText(textArray2[viewPager.getCurrentItem()]);
                 name.setText(textArray[viewPager.getCurrentItem()]);
 
@@ -174,7 +218,8 @@ product_amount extends FragmentActivity {
                 kind.setText(textArray2[viewPager.getCurrentItem()]);
                 name.setText(textArray[viewPager.getCurrentItem()]);
 
-                new CustomTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,textArray[viewPager.getCurrentItem()]);
+           //   new CustomTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            value();
             }
 
             @Override
@@ -211,14 +256,16 @@ product_amount extends FragmentActivity {
         imageLoader.init(config);
     }
 
-    class CustomTask extends AsyncTask<String, Void, String> {
+
+
+ /*   class CustomTask extends AsyncTask<String, Void, String> {
         String sendMsg, receiveMsg;
         @Override
         // doInBackground의 매개값이 문자열 배열인데요. 보낼 값이 여러개일 경우를 위해 배열로 합니다.
         protected String doInBackground(String... strings) {
             try {
                 ArrayList<String> str;
-                URL url = new URL("http://~~.jsp");//보낼 jsp 주소를 ""안에 작성합니다.
+                URL url = new URL("http://best54.cafe24.com/blu_android_jsp/product_amount.jsp");//보낼 jsp 주소를 ""안에 작성합니다.
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestMethod("POST");//데이터를 POST 방식으로 전송합니다.
@@ -272,7 +319,7 @@ product_amount extends FragmentActivity {
             //jsp로부터 받은 리턴 값입니다.
             return null;
         }
-    }
+    }*/
 
     //시본바 크기만큼 view를 늘려서 메뉴를 기본바 하단으로 이동
     private void dealStatusBar() {

@@ -17,6 +17,10 @@ import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.example.blu_main_test1.Main_page.MainActivity;
+import com.example.blu_main_test1.Main_page.Main_view_pager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -278,6 +282,7 @@ public class UartService extends Service {
         m_BluetoothGatt = null;
     }
 
+
     /**
      * Request a read on a given {@code BluetoothGattCharacteristic}. The read result is reported
      * asynchronously through the {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
@@ -354,6 +359,9 @@ public class UartService extends Service {
         boolean status = m_BluetoothGatt.writeCharacteristic(RxChar);
 
         Log.d(TAG, "write TXchar - status=" + status + new String(value));
+        if(status==false){
+            Toast.makeText(getApplicationContext(),"다시 시도해주세요",Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showMessage(String msg) {

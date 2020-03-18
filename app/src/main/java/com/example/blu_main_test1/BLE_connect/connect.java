@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.blu_main_test1.Main_page.MainActivity;
+import com.example.blu_main_test1.Main_page.Main_page2.product_amount;
 import com.example.blu_main_test1.Main_page.Main_view_pager;
 import com.example.blu_main_test1.R;
 
@@ -58,7 +59,7 @@ public class connect extends AppCompatActivity {
     private connect thisActivity;
     ScanManager m_Scan;
     UartService m_UartService;
-    public static boolean IsConnect;
+    public static boolean IsConnect=false;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,9 @@ public class connect extends AppCompatActivity {
         activityContext = this;
 
         task = new readTask();
-        task.execute();
+
+
+           task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         file = new File(getFilesDir(), "uuiddata.dat");
         if(file.exists()) {
@@ -119,8 +122,17 @@ public class connect extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ArrayList<QuadroUart> qu = la.getData();
-                 IsConnect = false;
-                for(int i = 0; i < qu.size();i++)
+
+                if(IsConnect==true)
+                {
+                    Toast.makeText(connect.this,"이미 연결중입니다.", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+               else
+                IsConnect = false;
+
+
+               for(int i = 0; i < qu.size();i++)
                 {
                     if(qu.get(i).getUuid().equals(uuid))
                     {
@@ -134,6 +146,7 @@ public class connect extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), Main_view_pager.class);
                     intent.putExtra("name",nameView.getText());
                     startActivity(intent);
+
 
                 }
             }
@@ -183,7 +196,10 @@ public class connect extends AppCompatActivity {
             m_Scan.ScanLeDevice(true);
         }
         uiChange(-1);
+
     }
+
+
     private void selectDevice(int po)
     {
         String newUuid = ((QuadroListViewAdapter) listView.getAdapter()).getItem(po);
@@ -385,6 +401,7 @@ public class connect extends AppCompatActivity {
                         //m_State = UART_PROFILE_CONNECTED;
                     }
                 });
+
             }
 
             //*********************//
@@ -451,6 +468,7 @@ public class connect extends AppCompatActivity {
         return intentFilter;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -471,6 +489,7 @@ public class connect extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onResume() {
+     //   new readTask().execute();
         if(m_Scan != null)
         {
             m_Scan.ScanLeDevice(true);

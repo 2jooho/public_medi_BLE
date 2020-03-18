@@ -7,4 +7,7 @@
     <string name="약관선택">E-mail 및 SMS 광고성 정보 수신동의 (선택)</string>
     <string name="약관선택_sub">다양한 프로모션 소식 및 신규 제품 정보를 알려드립니다.</string>
     <string name="special_char1">&amp;</string>
+    <string name="default_notification_channel_id">exam-id</string>
+    <string name="default_notification_channel_name">exam-name</string>
+    <string name="msg">exam-msg</string>
 </resources>
