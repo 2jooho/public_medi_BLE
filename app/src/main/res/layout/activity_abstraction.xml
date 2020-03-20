@@ -40,6 +40,7 @@
                 android:textSize="33dp"
                 android:layout_marginTop="-5dp"/>
             <Button
+                android:id="@+id/rong_coffee"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:background="@xml/login_login"
@@ -53,6 +54,7 @@
                 android:layout_marginRight="-8dp"
                 />
             <Button
+                android:id="@+id/presso"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
                 android:background="@xml/login_login"
@@ -87,6 +89,7 @@
                 android:textSize="33dp"
                 android:layout_marginTop="50dp"/>
             <Button
+                android:id="@+id/tea_big"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:background="@xml/login_login"
@@ -99,6 +102,7 @@
                 android:layout_marginLeft="-8dp"
                 />
             <Button
+                android:id="@+id/tea_small"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
                 android:background="@xml/login_login"

@@ -109,6 +109,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".MypageActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service android:name=".firebasemessaging.FireBaseMessagingService"   android:exported="false">
             <intent-filter><action android:name="com.google.firebase.MESSAGING_EVENT"/></intent-filter></service>

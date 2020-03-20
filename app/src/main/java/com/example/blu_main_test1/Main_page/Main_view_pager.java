@@ -50,6 +50,7 @@ import com.example.blu_main_test1.Main_page.MainActivity;
 
 import com.example.blu_main_test1.Main_page.listadapter;
 import com.example.blu_main_test1.Main_page.sampledata;
+import com.example.blu_main_test1.MypageActivity;
 import com.example.blu_main_test1.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -204,9 +205,11 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
                         startActivity(capsul);
                         break;
                     case "회원정보 변경" :
-                        Toast.makeText(getApplicationContext(),
+                        Intent mypage = new Intent(getApplicationContext(), MypageActivity.class);
+                        startActivity(mypage);
+                      /*  Toast.makeText(getApplicationContext(),
                                 myAdapter.getItem(position).getGrade(),
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_LONG).show(); */
                         break;
 
                 }
@@ -725,7 +728,7 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
+       private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
 
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
         public void onReceive(final Context context, Intent intent) {
@@ -741,8 +744,8 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
                             if(text.substring(1,6).equals("07RST")){
                                 switch(text.substring(6,8)){
                                     case "00" :
-                                       main.state.setText("절전모드");
-                                       draw_state.setText("절전모드");
+                                        main.state.setText("절전모드");
+                                        draw_state.setText("절전모드");
                                         break;
                                     case "10" :
                                         main.state.setText("가열중");
@@ -875,7 +878,7 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
 
 
 
-        }
+}
 
 
 
