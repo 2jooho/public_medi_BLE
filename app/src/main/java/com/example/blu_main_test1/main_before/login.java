@@ -1,21 +1,16 @@
 package com.example.blu_main_test1.main_before;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,38 +18,38 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.blu_main_test1.Main_page.MainActivity;
+import com.example.blu_main_test1.Main_page.Main_view_pager;
+import com.example.blu_main_test1.main_before.passwordResetActivity;
 import com.example.blu_main_test1.R;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnCompleteListener;
 
 
 public class login extends AppCompatActivity {
+    private FirebaseAuth mAuth;
+
     private String TAG = "VideoActivity";
     private VideoView videoView;
     EditText userId, userPwd;
-    Button loginBtn, joinBtn;
+    Button loginBtn, joinBtn, renewPwBtn;
     LinearLayout lin_login, lin_login_small,logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
+
         //상단메뉴 부분
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window window = getWindow();
             window.setFlags(
-                    WindowManager.LayoutParams.	FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.	FLAG_TRANSLUCENT_STATUS);
+                    WindowManager.LayoutParams.   FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.   FLAG_TRANSLUCENT_STATUS);
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -62,8 +57,10 @@ public class login extends AppCompatActivity {
 
         userId = (EditText) findViewById(R.id.userId);
         userPwd = (EditText) findViewById(R.id.userPwd);
+
         loginBtn = (Button) findViewById(R.id.loginBtn);
         joinBtn = (Button) findViewById(R.id.joinBtn);
+        renewPwBtn = (Button) findViewById(R.id.renewPwBtn);
         lin_login=(LinearLayout)findViewById(R.id.lin_login);
         lin_login_small=(LinearLayout)findViewById(R.id.lin_login_small);
         logo=(LinearLayout) findViewById(R.id.logo);
@@ -71,8 +68,8 @@ public class login extends AppCompatActivity {
         userPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
         userPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         loginBtn.setOnClickListener(btnListener);
+        renewPwBtn.setOnClickListener(btnListener);
         joinBtn.setOnClickListener(btnListener);
-
 
         //버전 호환
         if (Build.VERSION.SDK_INT > 9)
@@ -93,7 +90,7 @@ public class login extends AppCompatActivity {
         });
 
 
-    //애니메이션을 위한 변수
+        //애니메이션을 위한 변수
         final Animation animTrans = AnimationUtils.loadAnimation(
                 this,R.anim.anim_login);
         final Animation animTrans2 = AnimationUtils.loadAnimation(
@@ -120,13 +117,87 @@ public class login extends AppCompatActivity {
         userId.setVisibility(View.VISIBLE);
         userPwd.setVisibility(View.VISIBLE);
         loginBtn.setVisibility(View.VISIBLE);
+        renewPwBtn.setVisibility(View.VISIBLE);
         joinBtn.setVisibility(View.VISIBLE);
         lin_login_small.setVisibility(View.VISIBLE);
-
-
     }
 
-    //jsp와 연결하는 비동기식 로그인
+    //로그인 버튼에 따른 설정
+    View.OnClickListener btnListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.loginBtn : // 로그인 버튼 눌렀을 경우
+                    signin();
+/*                    String loginid = userId.getText().toString();
+                    String loginpwd = userPwd.getText().toString();
+                    try {
+                        /*String result = new CustomTask().execute(loginid,loginpwd).get();
+                        result=result.replaceAll(" ","");
+                        if(result.equals("true")) {
+                            Toast.makeText(getApplicationContext(),"로그인",Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else if(result.equals("false")) {
+                            Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀렸습니다.",Toast.LENGTH_SHORT).show();
+                            userId.setText("");
+                            userPwd.setText("");
+                        } else if(result.equals("noId")) {
+                            Toast.makeText(getApplicationContext(),"존재하지 않는 회원입니다.",Toast.LENGTH_SHORT).show();
+                            userId.setText("");
+                            userPwd.setText("");
+                        }
+                    }catch (Exception e) {} */
+                    break;
+
+                case R.id.renewPwBtn : //비밀번호 재설정
+                    startActivity(new Intent(login.this, passwordResetActivity.class));
+                    finish();
+                    break;
+
+                case R.id.joinBtn : // 회원가입
+                    //Intent intent = new Intent(getApplicationContext(),join.class); //약관 제외
+                    Intent intent = new Intent(getApplicationContext(), join_main.class);
+                    startActivity(intent);
+                    finish();
+                    break;
+            }
+        }
+    };
+
+    private void signin() {
+        String email = ((EditText) findViewById(R.id.userId)).getText().toString();
+        String password = ((EditText) findViewById(R.id.userPwd)).getText().toString();
+
+        if (email.length() > 0 && password.length() > 0) {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                //FirebaseUser user = mAuth.getCurrentUser();
+                                //Toast.makeText(getApplicationContext(),"로그인",Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(login.this, "로그인에 성공하였습니다.",Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), Main_view_pager.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                if (task.getException() != null) {
+                                    Toast.makeText(login.this, task.getException().toString(),Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        }
+                    });
+        } else {
+            Toast.makeText(login.this, "이메일 또는 비밀번호를 입력해 주세요.",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+        /*//jsp와 연결하는 비동기식 로그인
     class CustomTask extends AsyncTask<String, Void, String> {
         String sendMsg, receiveMsg;
         @Override
@@ -134,7 +205,7 @@ public class login extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 String str;
-                URL url = new URL("http://~~.jsp");//보낼 jsp 주소를 ""안에 작성합니다.
+                URL url = new URL("http://best54.cafe24.com/blu_android_jsp/login.jsp");//보낼 jsp 주소를 ""안에 작성합니다.
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestMethod("POST");//데이터를 POST 방식으로 전송합니다.
@@ -167,42 +238,6 @@ public class login extends AppCompatActivity {
             //jsp로부터 받은 리턴 값입니다.
             return receiveMsg;
         }
-    }
-    //로그인 버튼에 따른 설정
-    View.OnClickListener btnListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.loginBtn : // 로그인 버튼 눌렀을 경우
-
-                    String loginid = userId.getText().toString();
-                    String loginpwd = userPwd.getText().toString();
-                    try {
-                        String result = new CustomTask().execute(loginid,loginpwd).get();
-                        result=result.replaceAll(" ","");
-                        if(result.equals("true")) {
-                            Toast.makeText(getApplicationContext(),"로그인",Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else if(result.equals("false")) {
-                            Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀렸습니다.",Toast.LENGTH_SHORT).show();
-                            userId.setText("");
-                            userPwd.setText("");
-                        } else if(result.equals("noId")) {
-                            Toast.makeText(getApplicationContext(),"존재하지 않는 회원입니다.",Toast.LENGTH_SHORT).show();
-                            userId.setText("");
-                            userPwd.setText("");
-                        }
-                    }catch (Exception e) {}
-                    break;
-                case R.id.joinBtn : // 회원가입
-                   Intent intent = new Intent(getApplicationContext(),join.class);
-                   startActivity(intent);
-                    break;
-            }
-        }
-    };
-
+    }*/
 
 }

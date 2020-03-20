@@ -19,8 +19,7 @@
         android:id="@+id/logo"
        android:orientation="vertical"
         android:gravity="bottom"
-        android:layout_marginBottom="35dp"
-        >
+        android:layout_marginBottom="35dp">
         <ImageView
             android:layout_width="350dp"
             android:layout_height="120dp"
@@ -113,15 +112,24 @@
             android:textSize="19dp"
             android:background="@xml/login_login"
             android:text="login"/>
-            <Button
-                android:id="@+id/joinBtn"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:textColor="#E4E4E4"
-                android:textSize="19dp"
-                android:layout_marginLeft="40dp"
-                android:background="@xml/login_login"
-                android:text="회원가입"/>
+        <Button
+            android:id="@+id/renewPwBtn"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:textColor="#E4E4E4"
+            android:textSize="19dp"
+            android:layout_marginLeft="40dp"
+            android:background="@xml/login_login"
+            android:text="비밀번호 재설정"/>
+        <Button
+            android:id="@+id/joinBtn"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:textColor="#E4E4E4"
+            android:textSize="19dp"
+            android:layout_marginLeft="40dp"
+            android:background="@xml/login_login"
+            android:text="회원가입"/>
     </LinearLayout>
     </LinearLayout>
 </LinearLayout>
