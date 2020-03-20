@@ -148,6 +148,10 @@
             android:background="@xml/amount_ch_edit"
             android:backgroundTint="@color/logo_set_color"/>
     </LinearLayout>
-
+<ProgressBar
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:id="@+id/progressBar2"/>
 </FrameLayout>
 </LinearLayout>

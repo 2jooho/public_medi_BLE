@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.blu_main_test1.R;
@@ -78,11 +79,13 @@ product_amount extends FragmentActivity {
     ImageButton back;
     View positionView;
 
-
+   ProgressBar pgb ;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_amount);
+
+        pgb = (ProgressBar)findViewById(R.id.progressBar2);
 
         image=(ImageView)findViewById(R.id.image);
         viewPager = findViewById(R.id.view_pager);
@@ -98,6 +101,8 @@ product_amount extends FragmentActivity {
         top_btn.setOnClickListener(top_move);
         bottom_btn.setOnClickListener(bottom_move);
 
+
+        pgb.setVisibility(View.VISIBLE);
         //상단바 설정
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -132,20 +137,26 @@ product_amount extends FragmentActivity {
 
 
     }
+    //firebase를 이용하여 cloud db에 있는 정보를 가져옴
     public void value()
     {
         final String[] a = new String[1];
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //컬렉션 선택
         CollectionReference result= db.collection("BLE_APP");
+        //호출할 키값 쿼리 작성
         Query query = result.whereEqualTo("product_name",textArray[viewPager.getCurrentItem()]);
+        //쿼리 get형식 호출
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document : task.getResult())
                     {
+                        //해당 value값 불러옴
                             amount.setText(document.getData().get("amount").toString());
                             origin.setText(document.getData().get("product_origin").toString());
+                    pgb.setVisibility(View.GONE);
                     }
 
                 }

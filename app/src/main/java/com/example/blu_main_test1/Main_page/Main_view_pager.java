@@ -143,7 +143,7 @@ public class Main_view_pager extends AppCompatActivity implements View.OnClickLi
         }
 
 
-        //머신 상태를 호출
+        //ble 연결이 완료 되면 머신의 세부상태 모두 호출
         if(connect.IsConnect) {
             mTimer[0].schedule(new Tea_large(), 1000, 15000);
             mTimer[1].schedule(new State(), 1500, 15000);
